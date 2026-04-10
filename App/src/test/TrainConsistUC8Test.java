@@ -1,63 +1,88 @@
 import org.junit.jupiter.api.Test;
 import java.util.*;
+import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TrainConsistUC8Test {
 
-    // Reuse UC12 logic
-    private boolean isSafetyCompliant(List<GoodsBogie> bogies) {
+    // Loop-based filtering
+    private List<Bogie> filterWithLoop(List<Bogie> bogies) {
+        List<Bogie> result = new ArrayList<>();
+        for (Bogie b : bogies) {
+            if (b.getCapacity() > 60) {
+                result.add(b);
+            }
+        }
+        return result;
+    }
+
+    // Stream-based filtering
+    private List<Bogie> filterWithStream(List<Bogie> bogies) {
         return bogies.stream()
-                .allMatch(b ->
-                        !b.getType().equalsIgnoreCase("Cylindrical")
-                                || b.getCargo().equalsIgnoreCase("Petroleum")
-                );
+                .filter(b -> b.getCapacity() > 60)
+                .collect(Collectors.toList());
     }
 
-    @Test
-    void testSafety_AllBogiesValid() {
-        List<GoodsBogie> bogies = List.of(
-                new GoodsBogie("Cylindrical", "Petroleum"),
-                new GoodsBogie("Rectangular", "Coal"),
-                new GoodsBogie("Open", "Grain")
+    // Sample data
+    private List<Bogie> createSampleBogies() {
+        return List.of(
+                new Bogie("Sleeper", 72),
+                new Bogie("AC Chair", 56),
+                new Bogie("First Class", 80),
+                new Bogie("Sleeper", 60)
         );
-
-        assertTrue(isSafetyCompliant(bogies));
     }
 
     @Test
-    void testSafety_CylindricalWithInvalidCargo() {
-        List<GoodsBogie> bogies = List.of(
-                new GoodsBogie("Cylindrical", "Coal")  // invalid
-        );
+    void testLoopFilteringLogic() {
+        List<Bogie> result = filterWithLoop(createSampleBogies());
 
-        assertFalse(isSafetyCompliant(bogies));
+        assertEquals(2, result.size());
+        assertTrue(result.stream().allMatch(b -> b.getCapacity() > 60));
     }
 
     @Test
-    void testSafety_NonCylindricalBogiesAllowed() {
-        List<GoodsBogie> bogies = List.of(
-                new GoodsBogie("Open", "Coal"),
-                new GoodsBogie("Box", "Grain")
-        );
+    void testStreamFilteringLogic() {
+        List<Bogie> result = filterWithStream(createSampleBogies());
 
-        assertTrue(isSafetyCompliant(bogies));
+        assertEquals(2, result.size());
+        assertTrue(result.stream().allMatch(b -> b.getCapacity() > 60));
     }
 
     @Test
-    void testSafety_MixedBogiesWithViolation() {
-        List<GoodsBogie> bogies = List.of(
-                new GoodsBogie("Rectangular", "Coal"),
-                new GoodsBogie("Cylindrical", "Petroleum"),
-                new GoodsBogie("Cylindrical", "Coal") // violation
-        );
+    void testLoopAndStreamResultsMatch() {
+        List<Bogie> bogies = createSampleBogies();
 
-        assertFalse(isSafetyCompliant(bogies));
+        List<Bogie> loopResult = filterWithLoop(bogies);
+        List<Bogie> streamResult = filterWithStream(bogies);
+
+        assertEquals(loopResult.size(), streamResult.size());
     }
 
     @Test
-    void testSafety_EmptyBogieList() {
-        List<GoodsBogie> bogies = new ArrayList<>();
+    void testExecutionTimeMeasurement() {
+        List<Bogie> bogies = createSampleBogies();
 
-        assertTrue(isSafetyCompliant(bogies));
+        long start = System.nanoTime();
+        filterWithStream(bogies);
+        long end = System.nanoTime();
+
+        long elapsed = end - start;
+
+        assertTrue(elapsed > 0);
+    }
+
+    @Test
+    void testLargeDatasetProcessing() {
+        List<Bogie> largeList = new ArrayList<>();
+
+        for (int i = 0; i < 100000; i++) {
+            largeList.add(new Bogie("Sleeper", 50 + (i % 50)));
+        }
+
+        List<Bogie> result = filterWithStream(largeList);
+
+        assertNotNull(result);
+        assertTrue(result.stream().allMatch(b -> b.getCapacity() > 60));
     }
 }
