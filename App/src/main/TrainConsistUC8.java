@@ -3,8 +3,16 @@ import java.util.Scanner;
 
 public class TrainConsistUC8 {
 
-    // Binary Search Method
-    public static int binarySearch(String[] arr, String key) {
+    // Binary Search with fail-fast validation
+    public static boolean searchBogie(String[] arr, String key) {
+
+        // ✅ Fail-fast check
+        if (arr == null || arr.length == 0) {
+            throw new IllegalStateException("No bogies available in the train. Add bogies before searching.");
+        }
+
+        // Ensure sorted before binary search
+        Arrays.sort(arr);
 
         int low = 0;
         int high = arr.length - 1;
@@ -12,21 +20,20 @@ public class TrainConsistUC8 {
         while (low <= high) {
 
             int mid = (low + high) / 2;
-
             int cmp = arr[mid].compareTo(key);
 
             if (cmp == 0) {
-                return mid; // Found
+                return true;
             }
             else if (cmp < 0) {
-                low = mid + 1; // Search right half
+                low = mid + 1;
             }
             else {
-                high = mid - 1; // Search left half
+                high = mid - 1;
             }
         }
 
-        return -1; // Not found
+        return false;
     }
 
     public static void main(String[] args) {
@@ -39,25 +46,27 @@ public class TrainConsistUC8 {
 
         String[] bogieIds = new String[n];
 
-        System.out.println("Enter bogie IDs:");
-        for (int i = 0; i < n; i++) {
-            bogieIds[i] = sc.nextLine();
+        if (n > 0) {
+            System.out.println("Enter bogie IDs:");
+            for (int i = 0; i < n; i++) {
+                bogieIds[i] = sc.nextLine();
+            }
         }
-
-        // Ensure sorted (precondition)
-        Arrays.sort(bogieIds);
-
-        System.out.println("Sorted Bogie IDs: " + Arrays.toString(bogieIds));
 
         System.out.print("Enter bogie ID to search: ");
         String key = sc.nextLine();
 
-        int result = binarySearch(bogieIds, key);
+        try {
+            boolean found = searchBogie(bogieIds, key);
 
-        if (result != -1) {
-            System.out.println("Bogie found at position: " + result);
-        } else {
-            System.out.println("Bogie not found");
+            if (found) {
+                System.out.println("Bogie found");
+            } else {
+                System.out.println("Bogie not found");
+            }
+
+        } catch (IllegalStateException e) {
+            System.out.println("Error: " + e.getMessage());
         }
 
         System.out.println("Program continues...");
