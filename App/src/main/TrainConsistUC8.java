@@ -1,29 +1,46 @@
-import java.util.Arrays;
 import java.util.Scanner;
 
-public class  TrainConsistUC8{
+public class TrainConsistUC8 {
+
+    // Linear Search Method
+    public static int linearSearch(String[] bogieIds, String key) {
+
+        for (int i = 0; i < bogieIds.length; i++) {
+
+            // Compare using equals()
+            if (bogieIds[i].equals(key)) {
+                return i; // Found → return index
+            }
+        }
+
+        return -1; // Not found
+    }
 
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
 
-        System.out.print("Enter number of bogie types: ");
+        System.out.print("Enter number of bogies: ");
         int n = sc.nextInt();
         sc.nextLine(); // consume newline
 
-        String[] bogieTypes = new String[n];
+        String[] bogieIds = new String[n];
 
-        System.out.println("Enter bogie type names:");
+        System.out.println("Enter bogie IDs:");
         for (int i = 0; i < n; i++) {
-            bogieTypes[i] = sc.nextLine();
+            bogieIds[i] = sc.nextLine();
         }
 
-        System.out.println("Before Sorting: " + Arrays.toString(bogieTypes));
+        System.out.print("Enter bogie ID to search: ");
+        String key = sc.nextLine();
 
-        // Built-in sorting
-        Arrays.sort(bogieTypes);
+        int result = linearSearch(bogieIds, key);
 
-        System.out.println("After Sorting: " + Arrays.toString(bogieTypes));
+        if (result != -1) {
+            System.out.println("Bogie found at position: " + result);
+        } else {
+            System.out.println("Bogie not found");
+        }
 
         System.out.println("Program continues...");
     }
