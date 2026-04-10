@@ -1,15 +1,28 @@
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class TrainConsistUC8 {
 
-    // Linear Search Method
-    public static int linearSearch(String[] bogieIds, String key) {
+    // Binary Search Method
+    public static int binarySearch(String[] arr, String key) {
 
-        for (int i = 0; i < bogieIds.length; i++) {
+        int low = 0;
+        int high = arr.length - 1;
 
-            // Compare using equals()
-            if (bogieIds[i].equals(key)) {
-                return i; // Found → return index
+        while (low <= high) {
+
+            int mid = (low + high) / 2;
+
+            int cmp = arr[mid].compareTo(key);
+
+            if (cmp == 0) {
+                return mid; // Found
+            }
+            else if (cmp < 0) {
+                low = mid + 1; // Search right half
+            }
+            else {
+                high = mid - 1; // Search left half
             }
         }
 
@@ -22,7 +35,7 @@ public class TrainConsistUC8 {
 
         System.out.print("Enter number of bogies: ");
         int n = sc.nextInt();
-        sc.nextLine(); // consume newline
+        sc.nextLine();
 
         String[] bogieIds = new String[n];
 
@@ -31,10 +44,15 @@ public class TrainConsistUC8 {
             bogieIds[i] = sc.nextLine();
         }
 
+        // Ensure sorted (precondition)
+        Arrays.sort(bogieIds);
+
+        System.out.println("Sorted Bogie IDs: " + Arrays.toString(bogieIds));
+
         System.out.print("Enter bogie ID to search: ");
         String key = sc.nextLine();
 
-        int result = linearSearch(bogieIds, key);
+        int result = binarySearch(bogieIds, key);
 
         if (result != -1) {
             System.out.println("Bogie found at position: " + result);
