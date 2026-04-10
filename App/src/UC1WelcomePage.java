@@ -1,38 +1,42 @@
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
-public class TrainConsistUC6 {
+// Bogie class (custom object)
+class Bogie {
+    String name;
+    int capacity;
+
+    // Constructor
+    Bogie(String name, int capacity) {
+        this.name = name;
+        this.capacity = capacity;
+    }
+
+    // Display method
+    void display() {
+        System.out.println("Bogie: " + name + " -> Capacity: " + capacity);
+    }
+}
+
+public class TrainConsistUC7 {
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
 
-        // HashMap to store bogie -> capacity
-        Map<String, Integer> bogieCapacityMap = new HashMap<>();
+        // List to store bogie objects
+        List<Bogie> bogies = new ArrayList<>();
 
-        System.out.print("Enter number of bogies: ");
-        int n = sc.nextInt();
-        sc.nextLine(); // consume newline
+        // Adding passenger bogies
+        bogies.add(new Bogie("Sleeper", 72));
+        bogies.add(new Bogie("AC Chair", 56));
+        bogies.add(new Bogie("First Class", 24));
 
-        // Input bogie and capacity
-        for (int i = 0; i < n; i++) {
-            System.out.print("Enter Bogie Name: ");
-            String bogie = sc.nextLine();
+        // Sorting using Comparator (by capacity)
+        bogies.sort(Comparator.comparingInt(b -> b.capacity));
 
-            System.out.print("Enter Capacity: ");
-            int capacity = sc.nextInt();
-            sc.nextLine(); // consume newline
-
-            // Insert into HashMap
-            bogieCapacityMap.put(bogie, capacity);
+        // Display sorted bogies
+        System.out.println("Bogies Sorted by Capacity (Ascending):");
+        for (Bogie b : bogies) {
+            b.display();
         }
-
-        // Display bogie-capacity mapping
-        System.out.println("\nBogie Capacity Details:");
-        for (Map.Entry<String, Integer> entry : bogieCapacityMap.entrySet()) {
-            System.out.println("Bogie: " + entry.getKey() +
-                    " -> Capacity: " + entry.getValue());
-        }
-
-        sc.close();
     }
 }
