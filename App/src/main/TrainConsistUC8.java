@@ -1,56 +1,29 @@
+import java.util.Arrays;
 import java.util.Scanner;
 
-public class TrainConsistUC8 {
-
-    // Bubble Sort Method
-    public static void bubbleSort(int[] capacities) {
-        int n = capacities.length;
-
-        for (int i = 0; i < n - 1; i++) {
-            // Each pass
-            for (int j = 0; j < n - i - 1; j++) {
-
-                // Compare adjacent elements
-                if (capacities[j] > capacities[j + 1]) {
-
-                    // Swap
-                    int temp = capacities[j];
-                    capacities[j] = capacities[j + 1];
-                    capacities[j + 1] = temp;
-                }
-            }
-        }
-    }
-
-    // Display Method
-    public static void display(int[] arr) {
-        for (int val : arr) {
-            System.out.print(val + " ");
-        }
-        System.out.println();
-    }
+public class  TrainConsistUC8{
 
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
 
-        System.out.print("Enter number of bogies: ");
+        System.out.print("Enter number of bogie types: ");
         int n = sc.nextInt();
+        sc.nextLine(); // consume newline
 
-        int[] capacities = new int[n];
+        String[] bogieTypes = new String[n];
 
-        System.out.println("Enter capacities:");
+        System.out.println("Enter bogie type names:");
         for (int i = 0; i < n; i++) {
-            capacities[i] = sc.nextInt();
+            bogieTypes[i] = sc.nextLine();
         }
 
-        System.out.print("Before Sorting: ");
-        display(capacities);
+        System.out.println("Before Sorting: " + Arrays.toString(bogieTypes));
 
-        bubbleSort(capacities);
+        // Built-in sorting
+        Arrays.sort(bogieTypes);
 
-        System.out.print("After Sorting: ");
-        display(capacities);
+        System.out.println("After Sorting: " + Arrays.toString(bogieTypes));
 
         System.out.println("Program continues...");
     }
