@@ -1,38 +1,47 @@
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
-public class TrainConsistUC4 {
+// Reusing Bogie class from UC7
+class Bogie {
+    String name;
+    int capacity;
+
+    Bogie(String name, int capacity) {
+        this.name = name;
+        this.capacity = capacity;
+    }
+
+    void display() {
+        System.out.println("Bogie: " + name + " -> Capacity: " + capacity);
+    }
+}
+
+public class TrainConsistUC8 {
     public static void main(String[] args) {
 
-        // Create LinkedList for train consist
-        LinkedList<String> train = new LinkedList<>();
+        // Original bogie list
+        List<Bogie> bogies = new ArrayList<>();
+        bogies.add(new Bogie("Sleeper", 72));
+        bogies.add(new Bogie("AC Chair", 56));
+        bogies.add(new Bogie("First Class", 24));
+        bogies.add(new Bogie("Luxury", 80));
 
-        // Add bogies
-        train.add("Engine");
-        train.add("Sleeper");
-        train.add("AC");
-        train.add("Cargo");
-        train.add("Guard");
+        // Stream filtering (capacity > 60)
+        List<Bogie> filteredBogies = bogies.stream()
+                .filter(b -> b.capacity > 60)
+                .collect(Collectors.toList());
 
-        System.out.println("Initial Train Formation:");
-        System.out.println(train);
+        // Display filtered bogies
+        System.out.println("Filtered Bogies (Capacity > 60):");
+        for (Bogie b : filteredBogies) {
+            b.display();
+        }
 
-        // Insert Pantry Car at position 2 (index 2)
-        train.add(2, "Pantry");
-
-        System.out.println("\nAfter Adding Pantry Car at Position 2:");
-        System.out.println(train);
-
-        // Remove first and last bogie
-        train.removeFirst();
-        train.removeLast();
-
-        System.out.println("\nAfter Removing First and Last Bogie:");
-        System.out.println(train);
-
-        // Final ordered consist display
-        System.out.println("\nFinal Train Consist:");
-        for (String bogie : train) {
-            System.out.println(bogie);
+        // Verify original list unchanged
+        System.out.println("\nOriginal Bogie List (Unchanged):");
+        for (Bogie b : bogies) {
+            b.display();
         }
     }
 }
