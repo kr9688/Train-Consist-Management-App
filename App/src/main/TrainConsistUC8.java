@@ -1,7 +1,7 @@
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
-// Bogie class
+// Reusing Bogie class
 class Bogie {
     String name;
     int capacity;
@@ -9,10 +9,6 @@ class Bogie {
     Bogie(String name, int capacity) {
         this.name = name;
         this.capacity = capacity;
-    }
-
-    String getName() {
-        return name;
     }
 
     int getCapacity() {
@@ -27,10 +23,11 @@ class Bogie {
 
 public class TrainConsistUC8 {
 
-    // Method for grouping (helps in testing)
-    public static Map<String, List<Bogie>> groupBogiesByType(List<Bogie> bogies) {
+    // Method for aggregation (useful for testing)
+    public static int calculateTotalCapacity(List<Bogie> bogies) {
         return bogies.stream()
-                .collect(Collectors.groupingBy(Bogie::getName));
+                .map(b -> b.getCapacity())     // Extract capacities
+                .reduce(0, Integer::sum);     // Aggregate (sum)
     }
 
     public static void main(String[] args) {
@@ -39,22 +36,16 @@ public class TrainConsistUC8 {
         List<Bogie> bogies = new ArrayList<>();
         bogies.add(new Bogie("Sleeper", 72));
         bogies.add(new Bogie("AC Chair", 56));
-        bogies.add(new Bogie("Sleeper", 70));
         bogies.add(new Bogie("First Class", 24));
-        bogies.add(new Bogie("AC Chair", 60));
+        bogies.add(new Bogie("Sleeper", 70));
 
-        // Step 2–4: Stream → groupingBy → Map
-        Map<String, List<Bogie>> grouped = groupBogiesByType(bogies);
+        // Step 2–4: Stream → map → reduce
+        int totalCapacity = calculateTotalCapacity(bogies);
 
-        // Step 5: Display grouped result
-        System.out.println("Grouped Bogies:");
-        grouped.forEach((type, list) -> {
-            System.out.println("\nType: " + type);
-            list.forEach(System.out::println);
-        });
-
-        // Verify original list unchanged
-        System.out.println("\nOriginal List:");
+        // Step 5: Display result
+        System.out.println("Bogies:");
         bogies.forEach(System.out::println);
+
+        System.out.println("\nTotal Seating Capacity: " + totalCapacity);
     }
 }
